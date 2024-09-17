@@ -8,36 +8,39 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique
-  password  String
-  messages  Message[] @relation("UserMessages")
-  groups    GroupUser[]
+  id         Int         @id @default(autoincrement())
+  username   String      @unique
+  email      String      @unique
+  password   String
+  avatarUrl  String?
+  messages   Message[]   @relation("UserMessages")
+  groupUsers GroupUser[]
 }
 
 model Message {
   id        Int      @id @default(autoincrement())
   content   String
   createdAt DateTime @default(now())
-  sender    User     @relation("UserMessages", fields: [senderId], references: [id])
   senderId  Int
-  group     Group    @relation(fields: [groupId], references: [id])
   groupId   Int
+  sender    User     @relation("UserMessages", fields: [senderId], references: [id])
+  group     Group    @relation(fields: [groupId], references: [id])
 }
 
 model Group {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  messages  Message[]
-  users     GroupUser[]
+  id         Int         @id @default(autoincrement())
+  name       String?
+  isPrivate  Boolean     @default(false)
+  messages   Message[]
+  groupUsers GroupUser[]
 }
 
 model GroupUser {
-  id      Int    @id @default(autoincrement())
+  id      Int   @id @default(autoincrement())
   userId  Int
   groupId Int
-  user    User   @relation(fields: [userId], references: [id])
-  group   Group  @relation(fields: [groupId], references: [id])
+  user    User  @relation(fields: [userId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id])
+
   @@unique([userId, groupId])
 }
