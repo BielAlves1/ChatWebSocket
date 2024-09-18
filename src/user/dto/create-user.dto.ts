@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUrl,
   Length,
   Matches,
 } from 'class-validator';
@@ -16,7 +17,7 @@ export class CreateUserDto {
     message:
       'Nome de usuário deve conter pelo menos 5 caracteres e no máximo 25.',
   })
-  @Matches(/^[a-zA-Z0-9_]+$/, {
+  @Matches(/^[a-zA-Z0-9_@]+$/, {
     message:
       'Nome de usuário deve conter apenas letras, números e sublinhados.',
   })
@@ -36,6 +37,10 @@ export class CreateUserDto {
     message: 'Senha muito fraca!',
   })
   password: string;
+
+  @IsUrl({}, { message: 'A URL deve ser uma string.' })
+  @IsOptional()
+  avatarUrl?: string;
 
   @IsOptional()
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput;

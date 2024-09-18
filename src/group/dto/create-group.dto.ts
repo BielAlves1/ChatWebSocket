@@ -9,6 +9,7 @@ export class CreateGroupDto {
   })
   name?: string;
 
+  @IsOptional()
   @IsBoolean({
     message: 'Este campo é um booleano, insira true ou false apenas.',
   })

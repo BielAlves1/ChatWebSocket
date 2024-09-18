@@ -20,7 +20,7 @@ export class UserService {
     const user = await this.prisma.user.create({
       data: {
         ...createUserDto,
-        password: await bcrypt.hash(createUserDto.password, 15),
+        password: await bcrypt.hash(createUserDto.password, 10),
       },
     });
 
@@ -93,7 +93,7 @@ export class UserService {
     const userData: any = { ...updateUserDto };
     
     if (userData.password) {
-      userData.password = await bcrypt.hash(updateUserDto.password, 15);
+      userData.password = await bcrypt.hash(updateUserDto.password, 10);
     }
     
     try {

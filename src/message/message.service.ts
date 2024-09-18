@@ -22,8 +22,17 @@ export class MessageService {
     }
   }
 
-  findAll() {
-    return `This action returns all message`;
+  async findAll() {
+    const message = await this.prisma.message.findMany();
+
+    if (message.length === 0) {
+      throw new HttpException('Não existem mensagens salvas para listar.', HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      return message.map((message) => ({
+        ...message
+      }));
+    }
   }
 
   findOne(id: number) {

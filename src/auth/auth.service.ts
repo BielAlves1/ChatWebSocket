@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserService } from 'src/user/user.service';
@@ -36,6 +36,7 @@ export class AuthService {
             }
         }
 
-        throw new Error('O username e/ou a senha fornecidos estão incorretos.');
+        throw new HttpException('O e-mail e/ou a senha fornecidos estão incorretos, verifique.', HttpStatus.BAD_REQUEST,
+        );
     }
 }

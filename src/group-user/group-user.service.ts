@@ -22,8 +22,17 @@ export class GroupUserService {
     }
   }
 
-  findAll() {
-    return `This action returns all groupUser`;
+  async findAll() {
+    const groupUser = await this.prisma.groupUser.findMany();
+
+    if (groupUser.length === 0) {
+      throw new HttpException('Não existem grupos cadastrados para listar.', HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      return groupUser.map((group) => ({
+        ...group
+      }));
+    }
   }
 
   findOne(id: number) {

@@ -5,6 +5,7 @@ export class User implements Prisma.UserUncheckedCreateInput {
   username: string;
   email: string;
   password: string;
+  avatarUrl?: string;
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput;
   groupUsers?: Prisma.GroupUserUncheckedCreateNestedManyWithoutUserInput;
 }

@@ -7,7 +7,7 @@ import { UpdateMessageDto } from './dto/update-message.dto';
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @Post()
+  @Post('create')
   create(@Body() createMessageDto: CreateMessageDto) {
     return this.messageService.create(createMessageDto);
   }
@@ -17,17 +17,17 @@ export class MessageController {
     return this.messageService.findAll();
   }
 
-  @Get(':id')
+  @Get('find/:id')
   findOne(@Param('id') id: string) {
     return this.messageService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
     return this.messageService.update(+id, updateMessageDto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   remove(@Param('id') id: string) {
     return this.messageService.remove(+id);
   }

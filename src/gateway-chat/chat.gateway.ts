@@ -4,8 +4,6 @@ import {
   SubscribeMessage,
   MessageBody,
   ConnectedSocket,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { GroupService } from 'src/group/group.service';
@@ -17,9 +15,7 @@ import { CreateMessageDto } from 'src/message/dto/create-message.dto';
     origin: '*',
   },
 })
-export class MessageGateway
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+export class MessageGateway {
   @WebSocketServer() server: Server;
 
   constructor(
@@ -27,28 +23,30 @@ export class MessageGateway
     private readonly groupService: GroupService,
   ) {}
 
-  async handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
-  }
-
-  async handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
-  }
-
   @SubscribeMessage('sendMessage')
   async handleMessage(
     @MessageBody() payload: CreateMessageDto,
     @ConnectedSocket() client: Socket,
   ) {
-    const group = await this.groupService.findOne(payload.groupId);
+    const group = await this.groupService.findOrCreatePrivateGroup(
+      payload.senderId,
+      payload.groupId,
+    );
+
     if (!group) {
-      client.emit('errorMessage', 'O grupo não foi encontrado.');
+      client.emit(
+        'errorMessage',
+        'Não foi possível criar o grupo privado, falha na validação dos dados.',
+      );
       return;
     }
 
-    const message = await this.messageService.create(payload);
+    const message = await this.messageService.create({
+      ...payload,
+      groupId: group.id,
+    });
 
-    this.server.to(payload.groupId.toString()).emit('receiveMessage', message);
+    this.server.to(group.id.toString()).emit('receiveMessage', message);
 
     return message;
   }

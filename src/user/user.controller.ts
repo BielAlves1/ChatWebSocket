@@ -24,6 +24,11 @@ export class UserController {
     return this.userService.findUserName(username);
   }
 
+  @Get('find-email/:email')
+  findEmail(@Param('email') email: string) {
+    return this.userService.findUserName(email);
+  }
+
   @Get('find/:id')
   findUser(@Param('id') id: string) {
     return this.userService.findUser(+id);

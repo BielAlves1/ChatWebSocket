@@ -10,7 +10,7 @@ export class CreateMessageDto {
   @IsString({ message: 'O conteúdo da mensagem precisa ser uma string.' })
   @IsNotEmpty({ message: 'O conteúdo da mensagem não pode estar vazio.' })
   @Max(1000, {
-    message: 'Tamanho máximo do conteúdo da menasgem é de 1000 caracteres.',
+    message: 'Tamanho máximo do conteúdo da mensagem é de 1000 caracteres.',
   })
   content: string;
 
