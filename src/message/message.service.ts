@@ -1,11 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/database/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 
 @Injectable()
 export class MessageService {
-  create(createMessageDto: CreateMessageDto) {
-    return 'This action adds a new message';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createMessageDto: CreateMessageDto) {
+    const message = await this.prisma.message.create({
+      data: { ...createMessageDto },
+    });
+
+    if (!message) {
+      throw new HttpException(
+        'Mensagem não pode ser gravada no banco de dados, falha na validação dos dados.',
+        HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      return message;
+    }
   }
 
   findAll() {

@@ -3,15 +3,31 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './database/prisma.service';
 import { UserModule } from './user/user.module';
-import { GatewayChatGateway } from './gateway-chat/gateway-chat.gateway';
+import { AuthModule } from './auth/auth.module';
+import { MessageGateway } from './gateway-chat/chat.gateway';
 import { GroupUserModule } from './group-user/group-user.module';
 import { GroupModule } from './group/group.module';
 import { MessageModule } from './message/message.module';
-import { UserModule } from './user/user.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
-  imports: [UserModule, MessageModule, GroupModule, GroupUserModule],
+  imports: [
+    UserModule,
+    MessageModule,
+    GroupModule,
+    GroupUserModule,
+    AuthModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, GatewayChatGateway],
+  providers: [
+    AppService,
+    PrismaService,
+    MessageGateway,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
