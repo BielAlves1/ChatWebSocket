@@ -23,6 +23,12 @@ export class CreateMessageDto {
   )
   senderId: number;
 
+  @IsNumber(
+    {},
+    { message: 'O campo recebedor/usuário precisa ser um número(ID)' },
+  )
+  receiverId: number;
+
   @IsNumber({}, { message: 'O campo grupo precisa ser um número(ID)' })
   groupId: number;
 }

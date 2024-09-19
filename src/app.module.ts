@@ -10,6 +10,7 @@ import { GroupModule } from './group/group.module';
 import { MessageModule } from './message/message.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { GatewayChatModule } from './gateway-chat/chat.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     GroupModule,
     GroupUserModule,
     AuthModule,
+    GatewayChatModule,
   ],
   controllers: [AppController],
   providers: [

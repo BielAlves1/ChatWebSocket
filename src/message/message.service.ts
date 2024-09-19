@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -9,7 +9,11 @@ export class MessageService {
 
   async create(createMessageDto: CreateMessageDto) {
     const message = await this.prisma.message.create({
-      data: { ...createMessageDto },
+      data: {
+        content: createMessageDto.content,
+        senderId: createMessageDto.senderId,
+        groupId: createMessageDto.groupId,
+      },
     });
 
     if (!message) {
@@ -43,7 +47,26 @@ export class MessageService {
     return `This action updates a #${id} message`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} message`;
+  async remove(id: number) {
+    try {
+      await this.prisma.message.deleteMany({
+        where: { id },
+      });
+
+      return {
+        message: 'Mensagem removida com sucesso.',
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`Mensagem com o ID '${id}' não encontrada.`);
+      } else {
+        throw new HttpException('Erro ao remover mensagem, falha na validação dos dados.', HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
+
+  async removeAll() {
+    await this.prisma.message.deleteMany()
+    return 'Todos as mensagens foram removidas'
   }
 }

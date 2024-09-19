@@ -31,4 +31,9 @@ export class MessageController {
   remove(@Param('id') id: string) {
     return this.messageService.remove(+id);
   }
+
+  @Delete('delete-all')
+  removeAll() {
+    return this.messageService.removeAll();
+  }
 }

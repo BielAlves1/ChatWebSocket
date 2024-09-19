@@ -7,7 +7,7 @@ import { UpdateGroupUserDto } from './dto/update-group-user.dto';
 export class GroupUserController {
   constructor(private readonly groupUserService: GroupUserService) {}
 
-  @Post()
+  @Post('create')
   create(@Body() createGroupUserDto: CreateGroupUserDto) {
     return this.groupUserService.create(createGroupUserDto);
   }
@@ -17,17 +17,17 @@ export class GroupUserController {
     return this.groupUserService.findAll();
   }
 
-  @Get(':id')
+  @Get('find/:id')
   findOne(@Param('id') id: string) {
     return this.groupUserService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateGroupUserDto: UpdateGroupUserDto) {
     return this.groupUserService.update(+id, updateGroupUserDto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   remove(@Param('id') id: string) {
     return this.groupUserService.remove(+id);
   }
